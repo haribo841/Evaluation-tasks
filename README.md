@@ -1,58 +1,55 @@
-# Evaluation task 2
+# CSV Ingredient Aggregator
 
-<b>Program odczytuje dane z pliku CSV zawierajacego informacje o skladnikach nalesników, przetwarza i agreguje te dane, a nastepnie zapisuje wyniki do innego pliku CSV.</b>
+A compact C# console case study that reads ingredient-use records from CSV, normalizes units, aggregates values by hour, and writes a clean CSV result.
 
-## Uzyta biblioteka: 
+[Source code](https://github.com/haribo841/Evaluation-task-2) | [Input and output reference](docs/USAGE.md) | [Report an issue](https://github.com/haribo841/Evaluation-task-2/issues)
 
-<b>CsvHelper</b>
+## What it does
 
-## Metoda glówna:
+- Reads timestamped flour, groat, milk, and egg records with CsvHelper.
+- Groups records by hour.
+- Converts decagrams to kilograms, grams to kilograms, and millilitres to litres.
+- Prints the aggregate to the console and exports an ordered CSV file.
 
-Metoda Main stanowi punkt wejscia do programu.
-Poczatkowo definiuje sciezke do pliku <b>CSV</b> zawierajacego dane o skladnikach nalesników.
-Inicjalizuje instancje klas odpowiedzialnych za przetwarzanie danych, takich jak <b>CsvDataReader</b>, <b>DataAnalyzer</b>, <b>PancakeProcessor</b>, oraz <b>DataService</b>.
-Nastepnie wywoluje metode <b>ProcessCsvFile</b> z klasy <b>DataService</b>, aby odczytac i przetworzyc plik <b>CSV</b>.
-Po przetworzeniu danych, program zapisuje wyniki do nowego pliku <b>CSV</b>.
-W przypadku wystapienia bledów, program obsluguje wyjatki i wyswietla odpowiednie komunikaty.
+## Quick start
 
-## Klasa PancakeProcessor:
+There is no binary release. The primary project targets .NET 7.
 
-Klasa ta przetwarza i przeksztalca dane dotyczace ilosci skladników nalesników.
-Przelicza jednostki miar (dkg na kg, g na kg, ml na l) i agreguje dane.
+1. Clone the repository.
 
-## Klasa PancakeDataMap:
+   ```powershell
+   git clone https://github.com/haribo841/Evaluation-task-2.git
+   cd Evaluation-task-2
+   ```
 
-Jest to klasa definiujaca mapowanie miedzy kolumnami pliku <b>CSV</b> a wlasciwosciami klasy <b>PancakeData</b>.
-Ta klasa przyjmuje podsumowane dane i wyswietla je w formie tabelarycznej.
+2. Create an input CSV described in the [input and output reference](docs/USAGE.md).
+3. Update the `filePath` and `outputFilePath` values in `Program.cs` to point to your local files.
+4. Build the primary task. The command excludes the separate nested `Evaluation task 3` source tree, which the current project otherwise picks up automatically.
 
-## Klasa PancakeData:
+   ```powershell
+   dotnet build "Evaluation task 2.csproj" -p:DefaultExcludesInProjectFolder="Evaluation task 3/**"
+   ```
 
-Ta klasa definiuje strukture danych, w której przechowywane sa informacje o ilosci skladników nalesników, takie jak znacznik czasu, Maka, Kasza, Mleko i Jajka.
+5. Run the built processor.
 
-## Klasa IngredientUsage:
+   ```powershell
+   dotnet ".\bin\Debug\net7.0\Evaluation task 2.dll"
+   ```
 
-Klasa ta jest podobna do klasy <b>PancakeData</b> i definiuje strukture do przechowywania informacji o uzyciu skladników.
+## Supported environment
 
-## Interfejs ICsvReader:
+| Environment | Support |
+| --- | --- |
+| Windows | Supported in the current configuration because the program uses absolute Windows file paths. |
+| Linux and macOS | Supported by .NET after replacing the Windows-specific paths in `Program.cs`. |
+| .NET 7 SDK | Required by the primary project; use the documented build command while the nested task remains in this source tree. |
 
-Interfejs ten okresla metode do odczytywania plików <b>CSV</b>.
+## Documentation
 
-## Klasa CsvDataReader:
+See the [input and output reference](docs/USAGE.md) for the CSV schema, unit conversions, current limitations, and a source map.
 
-Ta klasa implementuje interfejs <b>ICsvReader</b> i jest odpowiedzialna za odczyt i przetwarzanie pliku <b>CSV</b>.
-Zawiera równiez metode do grupowania i sumowania danych.
+## License and issues
 
-## Klasa SumResult:
+No license file is currently published. For questions or reproducible defects, use [GitHub Issues](https://github.com/haribo841/Evaluation-task-2/issues).
 
-Ta klasa jest odpowiedzialna za agregacje i sumowanie danych zwiazanych z ilosciami skladników nalesników.
-Dane grupowane sa wedlug daty i godziny, a nastepnie obliczane sa sumy skladników (Maka, Kasza, Mleko, Jajka) dla kazdej grupy.
-Wyniki sa sortowane wedlug znacznika czasu.
-
-## Klasa DataAnalyzer:
-
-Ta klasa bierze podsumowane dane i wyswietla je w formie tabelarycznej.
-
-## Klasa DataService:
-
-Klasa ta koordynuje przetwarzanie danych, wykorzystujac interfejs <b>ICsvReader</b> oraz <b>PancakeProcessor</b> do odczytywania i przetwarzania danych.
-Wykorzystuje równiez klase <b>DataAnalyzer</b> do analizy i wyswietlania wyników.
+The previous class-by-class description is preserved in [the README archive](docs/archive/README-2026-09-06.md).
