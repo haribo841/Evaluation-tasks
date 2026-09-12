@@ -2,7 +2,7 @@
 
 A compact C# console case study that reads ingredient-use records from CSV, normalizes units, aggregates values by hour, and writes a clean CSV result.
 
-[Source code](https://github.com/haribo841/Evaluation-task-2) | [Input and output reference](docs/USAGE.md) | [Report an issue](https://github.com/haribo841/Evaluation-task-2/issues)
+[Source code](https://github.com/haribo841/Evaluation-tasks) | [Input and output reference](docs/USAGE.md) | [Report an issue](https://github.com/haribo841/Evaluation-tasks/issues)
 
 ## What it does
 
@@ -18,8 +18,8 @@ There is no binary release. The primary project targets .NET 7.
 1. Clone the repository.
 
    ```powershell
-   git clone https://github.com/haribo841/Evaluation-task-2.git
-   cd Evaluation-task-2
+   git clone https://github.com/haribo841/Evaluation-tasks.git
+   cd Evaluation-tasks
    ```
 
 2. Create an input CSV described in the [input and output reference](docs/USAGE.md).
@@ -50,6 +50,6 @@ See the [input and output reference](docs/USAGE.md) for the CSV schema, unit con
 
 ## License and issues
 
-No license file is currently published. For questions or reproducible defects, use [GitHub Issues](https://github.com/haribo841/Evaluation-task-2/issues).
+No license file is currently published. For questions or reproducible defects, use [GitHub Issues](https://github.com/haribo841/Evaluation-tasks/issues).
 
 The previous class-by-class description is preserved in [the README archive](docs/archive/README-2026-09-06.md).
