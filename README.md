@@ -1,6 +1,6 @@
 # CSV Ingredient Aggregator
 
-A compact C# console case study that reads ingredient-use records from CSV, normalizes units, aggregates values by hour, and writes a clean CSV result.
+A compact C# console case study that reads ingredient-use records from CSV, normalizes units, aggregates values by hour, and writes a CSV result. It is a learning project, not a production food-inventory system.
 
 [Source code](https://github.com/haribo841/Evaluation-tasks) | [Input and output reference](docs/USAGE.md) | [Report an issue](https://github.com/haribo841/Evaluation-tasks/issues)
 
@@ -10,10 +10,11 @@ A compact C# console case study that reads ingredient-use records from CSV, norm
 - Groups records by hour.
 - Converts decagrams to kilograms, grams to kilograms, and millilitres to litres.
 - Prints the aggregate to the console and exports an ordered CSV file.
+- Takes input and output paths as command-line arguments and refuses to overwrite an existing output file.
 
 ## Quick start
 
-There is no binary release. The primary project targets .NET 7.
+There is no binary release. Install a .NET SDK that can build `net7.0` and the .NET 7 runtime to execute this historical project. Its target framework is out of support; a framework upgrade is separate from this presentation update.
 
 1. Clone the repository.
 
@@ -22,31 +23,49 @@ There is no binary release. The primary project targets .NET 7.
    cd Evaluation-tasks
    ```
 
-2. Create an input CSV described in the [input and output reference](docs/USAGE.md).
-3. Update the `filePath` and `outputFilePath` values in `Program.cs` to point to your local files.
-4. Build the primary task. The command excludes the separate nested `Evaluation task 3` source tree, which the current project otherwise picks up automatically.
+2. Run the included, fictional [three-record example](docs/examples/ingredients.csv):
 
    ```powershell
-   dotnet build "Evaluation task 2.csproj" -p:DefaultExcludesInProjectFolder="Evaluation task 3/**"
+   dotnet run --project "Evaluation task 2.csproj" -- "docs/examples/ingredients.csv" "hourly-result.csv"
    ```
 
-5. Run the built processor.
+3. Open `hourly-result.csv` and compare it with the [expected output](docs/examples/expected-hourly.csv). To run it again, choose a different output name. No source editing is required.
 
-   ```powershell
-   dotnet ".\bin\Debug\net7.0\Evaluation task 2.dll"
-   ```
+The primary project now excludes `Evaluation task 3/` automatically. That folder remains an independent exercise.
+
+## Example result
+
+The input deliberately contains a 09:05 record before two records from 08:00-08:59. The output combines the earlier hour and sorts both rows:
+
+```csv
+TIMESTAMP,FLOUR,GROAT,MILK,EGG
+01/01/2026 08:00:00,1,1,1,3
+01/01/2026 09:00:00,0.25,0.12,0.25,1
+```
+
+`FLOUR` and `GROAT` are now in kilograms, `MILK` in litres, and `EGG` is a count. The 125 g groat value becomes `0.12` kg because the existing algorithm uses .NET's default midpoint-to-even rounding to two decimal places. This behavior is documented and covered by the example comparison.
 
 ## Supported environment
 
 | Environment | Support |
 | --- | --- |
-| Windows | Supported in the current configuration because the program uses absolute Windows file paths. |
-| Linux and macOS | Supported by .NET after replacing the Windows-specific paths in `Program.cs`. |
-| .NET 7 SDK | Required by the primary project; use the documented build command while the nested task remains in this source tree. |
+| Windows | Verified with .NET SDK 10.0.302 and .NET runtime 7.0.20. |
+| Linux and macOS | Paths are supplied at runtime; execution on these platforms has not been verified. |
+| Technology | C#, .NET 7 console application, CsvHelper 30.0.1. |
+
+## Checks
+
+With PowerShell 7 available, run:
+
+```powershell
+pwsh -File tests/smoke.ps1
+```
+
+The script builds Release and runs 11 CLI checks, including the example result, invalid input, missing arguments, paths containing spaces, refusal to overwrite files, and header-only input. It uses fictional data in a new temporary directory and keeps that directory for inspection. These are focused regression checks, not a full test suite for every input value.
 
 ## Documentation
 
-See the [input and output reference](docs/USAGE.md) for the CSV schema, unit conversions, current limitations, and a source map.
+See the [input and output reference](docs/USAGE.md) for the CSV schema, processing diagram, unit conversions, exit codes, current limitations, and a source map.
 
 ## License and issues
 

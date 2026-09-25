@@ -38,7 +38,7 @@ namespace Evaluation_task_2
                             }
                             catch (Exception ex)
                             {
-                                Console.WriteLine($"Wystąpił błąd podczas przetwarzania danych: {ex.Message}");
+                                Console.Error.WriteLine($"Cannot process the CSV ({ex.GetType().Name}). Check the path, headers, and values.");
                                 return null;
                             }
                         }

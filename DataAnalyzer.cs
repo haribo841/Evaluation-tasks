@@ -14,10 +14,11 @@ namespace Evaluation_task_2
         {
             SumResult sumResult = new SumResult();
             IEnumerable<IngredientUsage> summedResults = (IEnumerable<IngredientUsage>)sumResult.SumResults(result);
-            Console.WriteLine("TIMESTAMP\t\t\tFlour\tGroat\tMilk\tEgg");
+            Console.WriteLine("TIMESTAMP\tFlour [kg]\tGroat [kg]\tMilk [l]\tEgg");
             foreach (var item in summedResults)
             {
-                Console.WriteLine($"{item.TIMESTAMP:yyyy-MM-dd HH:mm:ss zzz}\t{item.FLOUR:F1}\t{item.GROAT:F2}\t{item.MILK:F2}\t{item.EGG}");
+                Console.WriteLine(FormattableString.Invariant(
+                    $"{item.TIMESTAMP:yyyy-MM-dd HH:mm:ss}\t{item.FLOUR:G}\t{item.GROAT:G}\t{item.MILK:G}\t{item.EGG}"));
             }
         }
     }
