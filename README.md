@@ -1,6 +1,16 @@
-# WebApplication1 — ASP.NET Core recruitment exercise
+# ASP.NET Core XML CRUD
 
 An ASP.NET Core MVC recruitment exercise with authentication scaffolding and simple user-record CRUD flows. Application records are serialized to a local XML file; this is a learning project, not a production-ready identity or personnel-management system.
+
+[Source](https://github.com/haribo841/aspnetcore-xml-crud) | [Setup guide](docs/SETUP.md) | [MIT license](LICENSE) | [Report an issue](https://github.com/haribo841/aspnetcore-xml-crud/issues)
+
+## Preview and example
+
+![The running MVC application showing two fictional XML-backed records](docs/images/user-records.png)
+
+Actual local application capture with fictional records. The application interface is in Polish. The image demonstrates the XML-backed list only, not a verified login or database deployment.
+
+Example workflow: open the record list, choose **Dodaj użytkownika**, enter fictional development data, save, and reopen the record using **Edytuj**. The record is persisted in the local `users.xml` file. See [the isolated preview instructions](docs/SETUP.md#isolated-ui-preview) to reproduce the screenshot without using a real database or real personal data.
 
 ## What it demonstrates
 
@@ -30,7 +40,9 @@ The migration command requires the matching Entity Framework CLI to be available
 
 ## Important limitations
 
-The application requires confirmed accounts through its current Identity configuration. It also writes application user records to users.xml in the working directory once data is created. Use only non-sensitive development data, protect the database connection string with user secrets or environment variables, and do not commit generated XML data.
+The Identity configuration requires confirmed accounts, but authorization is not applied consistently across the CRUD routes. The `Home` routes expose XML operations without an authorization attribute. Do not expose this exercise to the internet or use real personal data. The project also targets the unsupported .NET 7 framework and needs a separate modernization and security review before deployment.
+
+It writes application user records to `users.xml` in the working directory once data is created. Protect database connection strings with user secrets or environment variables, and do not commit generated XML data.
 
 The checked-in development configuration should be overridden locally with a dedicated development database; do not use a system database for application data.
 
@@ -38,5 +50,5 @@ The checked-in development configuration should be overridden locally with a ded
 
 - [Setup guide](docs/SETUP.md)
 - [Previous README archive](docs/archive/README-2026-09-16.md)
-- No license file is currently included. Ask the author before reuse.
+- [MIT license](LICENSE). Bundled browser libraries retain their [original licenses](docs/THIRD-PARTY.md).
 - Report a reproducible issue without including database strings, accounts, or user data.
