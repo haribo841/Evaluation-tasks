@@ -1,74 +1,47 @@
-# CSV Ingredient Aggregator
+# Evaluation tasks
 
-A compact C# console case study that reads ingredient-use records from CSV, normalizes units, aggregates values by hour, and writes a CSV result. It is a learning project, not a production food-inventory system.
+Trzy historyczne zadania ewaluacyjne w C#. Każde ma osobny katalog, projekt i instrukcję. Zadanie ASP.NET Core XML CRUD zostało przeniesione z repozytorium `aspnetcore-xml-crud` jako zadanie 1. Repozytorium źródłowe zostanie wykorzystane dla aplikacji Kolejka transkrypcji.
 
-[Source code](https://github.com/haribo841/Evaluation-tasks) | [Input and output reference](docs/USAGE.md) | [Report an issue](https://github.com/haribo841/Evaluation-tasks/issues)
+| Zadanie | Zawartość | Framework | Instrukcja |
+| --- | --- | --- | --- |
+| [Evaluation-task1](Evaluation-task1) | ASP.NET Core MVC, Identity, SQL Server i CRUD rekordów przechowywanych w XML | .NET 7 | [README](Evaluation-task1/README.md), [konfiguracja i lokalny podgląd](Evaluation-task1/docs/SETUP.md) |
+| [Evaluation-task2](Evaluation-task2) | Wczytywanie CSV, normalizacja jednostek składników i agregacja godzinowa | .NET 7 | [README](Evaluation-task2/README.md), [format danych](Evaluation-task2/docs/USAGE.md) |
+| [Evaluation-task3](Evaluation-task3) | Nieukończony prototyp przedziałów raportu HR na podstawie kontraktów | .NET 9 | [README](Evaluation-task3/README.md) |
 
-## What it does
+## Budowanie
 
-- Reads timestamped flour, groat, milk, and egg records with CsvHelper.
-- Groups records by hour.
-- Converts decagrams to kilograms, grams to kilograms, and millilitres to litres.
-- Prints the aggregate to the console and exports an ordered CSV file.
-- Takes input and output paths as command-line arguments and refuses to overwrite an existing output file.
-
-## Quick start
-
-There is no binary release. Install a .NET SDK that can build `net7.0` and the .NET 7 runtime to execute this historical project. Its target framework is out of support; a framework upgrade is separate from this presentation update.
-
-1. Clone the repository.
-
-   ```powershell
-   git clone https://github.com/haribo841/Evaluation-tasks.git
-   cd Evaluation-tasks
-   ```
-
-2. Run the included, fictional [three-record example](docs/examples/ingredients.csv):
-
-   ```powershell
-   dotnet run --project "Evaluation task 2.csproj" -- "docs/examples/ingredients.csv" "hourly-result.csv"
-   ```
-
-3. Open `hourly-result.csv` and compare it with the [expected output](docs/examples/expected-hourly.csv). To run it again, choose a different output name. No source editing is required.
-
-The primary project now excludes `Evaluation task 3/` automatically. That folder remains an independent exercise.
-
-## Example result
-
-The input deliberately contains a 09:05 record before two records from 08:00-08:59. The output combines the earlier hour and sorts both rows:
-
-```csv
-TIMESTAMP,FLOUR,GROAT,MILK,EGG
-01/01/2026 08:00:00,1,1,1,3
-01/01/2026 09:00:00,0.25,0.12,0.25,1
-```
-
-`FLOUR` and `GROAT` are now in kilograms, `MILK` in litres, and `EGG` is a count. The 125 g groat value becomes `0.12` kg because the existing algorithm uses .NET's default midpoint-to-even rounding to two decimal places. This behavior is documented and covered by the example comparison.
-
-## Supported environment
-
-| Environment | Support |
-| --- | --- |
-| Windows | Verified with .NET SDK 10.0.302 and .NET runtime 7.0.20. |
-| Linux and macOS | Paths are supplied at runtime; execution on these platforms has not been verified. |
-| Technology | C#, .NET 7 console application, CsvHelper 30.0.1. |
-
-## Checks
-
-With PowerShell 7 available, run:
+Z katalogu głównego repozytorium:
 
 ```powershell
-pwsh -File tests/smoke.ps1
+dotnet restore Evaluation-tasks.sln
+dotnet build Evaluation-tasks.sln -c Release --no-restore
 ```
 
-The script builds Release and runs 11 CLI checks, including the example result, invalid input, missing arguments, paths containing spaces, refusal to overwrite files, and header-only input. It uses fictional data in a new temporary directory and keeps that directory for inspection. These are focused regression checks, not a full test suite for every input value.
+Solution obejmuje trzy niezależne projekty. Do uruchamiania zadań 1 i 2 potrzebny jest runtime .NET 7, a zadania 3 runtime .NET 9. Budowanie sprawdzono lokalnie z SDK 10.0.302. Zadania zachowują swoje frameworki i istniejące ograniczenia; ta migracja nie stanowi modernizacji aplikacji.
 
-## Documentation
+## Uruchamianie i sprawdzanie
 
-See the [input and output reference](docs/USAGE.md) for the CSV schema, processing diagram, unit conversions, exit codes, current limitations, and a source map.
+Zadanie 1 uruchamiaj z jego własnego katalogu, ponieważ XML i raporty zapisuje względem katalogu roboczego:
 
-## License and issues
+```powershell
+Set-Location Evaluation-task1
+dotnet run --project WebApplication1.csproj
+```
 
-No license file is currently published. For questions or reproducible defects, use [GitHub Issues](https://github.com/haribo841/Evaluation-tasks/issues).
+Najpierw wykonaj [konfigurację SQL Server i Identity](Evaluation-task1/docs/SETUP.md). Dostępny jest także odseparowany podgląd na fikcyjnych danych, bez połączenia z rzeczywistą bazą. Historyczny projekt wymaga przeglądu bezpieczeństwa przed udostępnianiem poza lokalnym środowiskiem.
 
-The previous class-by-class description is preserved in [the README archive](docs/archive/README-2026-09-06.md).
+Zadanie 2 zawiera przykładowe dane i testy uruchomienia. Z katalogu głównego:
+
+```powershell
+pwsh -File Evaluation-task2/tests/smoke.ps1
+```
+
+Test buduje projekt Release i sprawdza 11 scenariuszy CLI, w tym poprawność przykładu, zachowanie wejścia i odmowę nadpisania wyniku.
+
+Zadanie 3 jest zachowanym prototypem. Dodano brakującą zależność CsvHelper, aby można było zbudować projekt. Nadal ma ścieżki wejścia i wyjścia wpisane w `Program.cs`; jego działanie nie zostało potwierdzone jako kompletnego generatora raportów HR. Nie używaj rzeczywistych danych do prób.
+
+## Historia i licencje
+
+Połączenie dołącza historię CRUD-a jako drugi rodzic commita migracji, bez przepisywania wcześniejszych commitów. Szczegóły źródeł i zakres zmian opisuje [dokument migracji](docs/MIGRATION.md). Dawne opisy pozostają w archiwach poszczególnych zadań.
+
+[Licencja MIT](Evaluation-task1/LICENSE) i [licencje bibliotek frontendowych](Evaluation-task1/docs/THIRD-PARTY.md) dotyczą zadania 1. Zadania 2 i 3 nie mają osobno opublikowanych licencji. [Zgłoszenia](https://github.com/haribo841/Evaluation-tasks/issues) dotyczą całego zbioru zadań.
